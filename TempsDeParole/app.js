@@ -24,7 +24,8 @@ var g_arrGlobalTimer = {
 
 var g_arrAnimateurs = GetAnimateursFromServer();
 
-var g_arrLastIndexPush = { index: 0 }
+// Tableau qui permet de donner une valeur récupérable n'importe ou à mes indexs locals
+var g_arrLastIndexPush = { indexValue: 0 }
 
 // Créer une nouvelle date et appel la fonction startTimer
 const start = function (index) {
@@ -36,13 +37,28 @@ const start = function (index) {
       startTimer(index);
       permaTimer();
    }
-   g_arrLastIndexPush.index = index
+   // Si le timer 1 est route bloque le bouton pause du timer 2 et inversement
+   if (index == 0) {
+      var animateur = g_arrAnimateurs;
+      animateur[1].btnHalt.disabled = true;
+      animateur[0].btnHalt.disabled = false;
+   } else {
+      var animateur = g_arrAnimateurs;
+      animateur[0].btnHalt.disabled = true;
+      animateur[1].btnHalt.disabled = false;
+   }
+
+   if (index != g_arrLastIndexPush.indexValue) {
+      halt;
+   }
+   g_arrLastIndexPush.indexValue = index
 };
 
 // Met sur pose le timer
 const halt = function (index) {
 
-   if (index != g_arrLastIndexPush.index) {
+   // Si le timer 1 est en marche et que j'appuie sur le btn pause du timer 2 je sors de la boucle et donc je ne fais rien
+   if (index != g_arrLastIndexPush.indexValue) {
       return;
    }
 
@@ -99,7 +115,7 @@ const reset = function (index) {
    animateur.diffTimeSpokenMs       = 0;
    animateur.timeSpokenMs           = 0;
    animateur.chrono.textContent     = displayTime(0);
-   animateur.btnStart.textContent   = "Commencer" ;
+   animateur.btnStart.textContent   = "Commencer";
 
    g_bIsStop                        = true;
    clearTimeout(g_timeout);

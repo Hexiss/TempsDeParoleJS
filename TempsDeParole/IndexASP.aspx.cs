@@ -3,6 +3,7 @@ using System.Linq;
 using System.Web.Script.Serialization;
 using System.Web.UI.WebControls;
 
+
 namespace TempsDeParole
 {
    public partial class IndexASP : System.Web.UI.Page
@@ -28,6 +29,11 @@ namespace TempsDeParole
             strAnimateursJSON = js.Serialize(list);
          }
          return strAnimateursJSON;
+      }
+
+      public void submit ()
+      {
+
       }
    }
 }
