@@ -4,8 +4,9 @@
     <EntitySetMapping Name="Animateurs">
       <EntityTypeMapping TypeName="TempsDeParoleModel.Animateurs">
         <MappingFragment StoreEntitySet="Animateurs">
-          <ScalarProperty Name="Temps" ColumnName="Temps" />
-          <ScalarProperty Name="Animateur" ColumnName="Animateur" />
+          <ScalarProperty Name="timeSpokenMs" ColumnName="timeSpokenMs" />
+          <ScalarProperty Name="diffTimeSpokenMs" ColumnName="diffTimeSpokenMs" />
+          <ScalarProperty Name="name" ColumnName="name" />
           <ScalarProperty Name="id" ColumnName="id" />
         </MappingFragment>
       </EntityTypeMapping>

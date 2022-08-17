@@ -10,8 +10,9 @@
             <PropertyRef Name="id" />
           </Key>
           <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Animateur" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="Temps" Type="bigint" Nullable="false" />
+          <Property Name="name" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="diffTimeSpokenMs" Type="bigint" Nullable="false" />
+          <Property Name="timeSpokenMs" Type="bigint" Nullable="false" />
         </EntityType>
         <EntityContainer Name="TempsDeParoleModelStoreContainer">
           <EntitySet Name="Animateurs" EntityType="Self.Animateurs" Schema="dbo" store:Type="Tables" />
@@ -26,12 +27,11 @@
         <EntityType Name="Animateurs">
           <Key>
             <PropertyRef Name="id" />
-            <PropertyRef Name="Animateur" />
-            <PropertyRef Name="Temps" />
           </Key>
           <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Animateur" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Temps" Type="Int64" Nullable="false" />
+          <Property Name="name" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="diffTimeSpokenMs" Type="Int64" Nullable="false" />
+          <Property Name="timeSpokenMs" Type="Int64" Nullable="false" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -42,8 +42,9 @@
           <EntitySetMapping Name="Animateurs">
             <EntityTypeMapping TypeName="TempsDeParoleModel.Animateurs">
               <MappingFragment StoreEntitySet="Animateurs">
-                <ScalarProperty Name="Temps" ColumnName="Temps" />
-                <ScalarProperty Name="Animateur" ColumnName="Animateur" />
+                <ScalarProperty Name="timeSpokenMs" ColumnName="timeSpokenMs" />
+                <ScalarProperty Name="diffTimeSpokenMs" ColumnName="diffTimeSpokenMs" />
+                <ScalarProperty Name="name" ColumnName="name" />
                 <ScalarProperty Name="id" ColumnName="id" />
               </MappingFragment>
             </EntityTypeMapping>

@@ -5,8 +5,9 @@
       <PropertyRef Name="id" />
     </Key>
     <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-    <Property Name="Animateur" Type="nvarchar" MaxLength="50" Nullable="false" />
-    <Property Name="Temps" Type="bigint" Nullable="false" />
+    <Property Name="name" Type="varchar" MaxLength="30" Nullable="false" />
+    <Property Name="diffTimeSpokenMs" Type="bigint" Nullable="false" />
+    <Property Name="timeSpokenMs" Type="bigint" Nullable="false" />
   </EntityType>
   <EntityContainer Name="TempsDeParoleModelStoreContainer">
     <EntitySet Name="Animateurs" EntityType="Self.Animateurs" Schema="dbo" store:Type="Tables" />

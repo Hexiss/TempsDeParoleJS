@@ -6,11 +6,10 @@
   <EntityType Name="Animateurs">
     <Key>
       <PropertyRef Name="id" />
-      <PropertyRef Name="Animateur" />
-      <PropertyRef Name="Temps" />
     </Key>
     <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-    <Property Name="Animateur" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-    <Property Name="Temps" Type="Int64" Nullable="false" />
+    <Property Name="name" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="false" />
+    <Property Name="diffTimeSpokenMs" Type="Int64" Nullable="false" />
+    <Property Name="timeSpokenMs" Type="Int64" Nullable="false" />
   </EntityType>
 </Schema>

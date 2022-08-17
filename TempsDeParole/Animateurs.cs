@@ -15,7 +15,8 @@ namespace TempsDeParole
     public partial class Animateurs
     {
         public int id { get; set; }
-        public string Animateur { get; set; }
-        public long Temps { get; set; }
+        public string name { get; set; }
+        public long diffTimeSpokenMs { get; set; }
+        public long timeSpokenMs { get; set; }
     }
 }

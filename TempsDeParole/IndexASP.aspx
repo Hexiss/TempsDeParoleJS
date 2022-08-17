@@ -43,6 +43,11 @@
          </div>
       </div>
 
+   <script>
+      function GetAnimateursFromServer() {
+         return <%= m_strAnimateurs%>;
+      }
+   </script>
    <script src="./app.js"></script>
 </body>
 </html>

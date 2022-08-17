@@ -15,35 +15,14 @@ var g_dtHalt       = undefined;
 var g_timeout;
 var g_permaTimeout;
 
-var g_bIsStop      = true;
-
-var g_arrAnimateurs = [
-   {
-      id              : 0,
-      name            : "David",
-      diffTimeSpokenMs: 0,
-      timeSpokenMs    : 0,
-      btnStart        : undefined,
-      btnHalt         : undefined,
-      btnReset        : undefined,
-      chrono          : undefined,
-   },
-   {
-      id              : 1,
-      name            : "Bernard",
-      diffTimeSpokenMs: 0,
-      timeSpokenMs    : 0,
-      btnStart        : undefined,
-      btnHalt         : undefined,
-      btnReset        : undefined,
-      chrono          : undefined,
-   }
-];
+var g_bIsStop = true;
 
 var g_arrGlobalTimer = {
       globalTimeSpokenMs : 0,
       chronoGlobal       : undefined,
    };
+
+var g_arrAnimateurs = GetAnimateursFromServer();
 
 var g_arrLastIndexPush = { index: 0 }
 
@@ -59,7 +38,6 @@ const start = function (index) {
    }
    g_arrLastIndexPush.index = index
 };
-
 
 // Met sur pose le timer
 const halt = function (index) {
