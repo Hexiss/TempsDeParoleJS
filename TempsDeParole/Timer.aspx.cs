@@ -6,7 +6,7 @@ using System.Web.UI.WebControls;
 
 namespace TempsDeParole
 {
-   public partial class IndexASP : System.Web.UI.Page
+   public partial class Timer : System.Web.UI.Page
    {
 
       public string m_strAnimateurs { get; set; }
@@ -29,11 +29,6 @@ namespace TempsDeParole
             strAnimateursJSON = js.Serialize(list);
          }
          return strAnimateursJSON;
-      }
-
-      public void submit ()
-      {
-
       }
    }
 }
