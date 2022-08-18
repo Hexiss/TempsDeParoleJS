@@ -26,5 +26,6 @@ namespace TempsDeParole
         }
     
         public virtual DbSet<Animateurs> Animateurs { get; set; }
+        public virtual DbSet<Users> Users { get; set; }
     }
 }

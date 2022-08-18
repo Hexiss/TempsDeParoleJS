@@ -5,11 +5,19 @@
 
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
    <body class="container">
-      <h1>Test en cours</h1>
-         <span>Créer un nouvelle utilisateur</span> <br>
-      <form class="form-inline">
-         <input class="form-control mr-sm-2" type="search" placeholder="Entrer un nom" aria-label="Confirmer">
-         <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Confirmer</button>
-      </form>
+      <h1>Nouvelle utilisateur</h1>
+<form>
+  <div class="form-row">
+    <div class="form-group col-md-6">
+      <label for="inputEmail4">Nom</label>
+      <input type="text" class="form-control" id="name" placeholder="Nom">
+    </div>
+    <div class="form-group col-md-6">
+      <label for="inputPassword4">Date de naissance</label>
+      <input type="date" class="form-control" id="birth_date">
+    </div>
+  </div>
+  <button type="submit" class="btn btn-primary">Enregistrer</button>
+</form>
    </body>
 </asp:Content>

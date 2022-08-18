@@ -6,6 +6,7 @@
     <edmx:Diagrams>
       <Diagram DiagramId="3f1e320adee64c869ed3745d8ab2db83" Name="Diagram1" >
         <EntityTypeShape EntityType="TempsDeParoleModel.Animateurs" Width="1.5" PointX="0.75" PointY="0.75" />
+        <EntityTypeShape EntityType="TempsDeParoleModel.Users" Width="1.5" PointX="3.375" PointY="0.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

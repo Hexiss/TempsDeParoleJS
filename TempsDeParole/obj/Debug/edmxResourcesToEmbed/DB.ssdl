@@ -9,7 +9,17 @@
     <Property Name="diffTimeSpokenMs" Type="bigint" Nullable="false" />
     <Property Name="timeSpokenMs" Type="bigint" Nullable="false" />
   </EntityType>
+  <EntityType Name="Users">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="name" Type="varchar" MaxLength="50" />
+    <Property Name="birth_date" Type="datetime" />
+    <Property Name="creation_date" Type="datetime" />
+  </EntityType>
   <EntityContainer Name="TempsDeParoleModelStoreContainer">
     <EntitySet Name="Animateurs" EntityType="Self.Animateurs" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
   </EntityContainer>
 </Schema>

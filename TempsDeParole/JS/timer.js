@@ -5,9 +5,11 @@
 //On ne peux pas avoir plusieurs fois le même ID donc on utilise les classes
 var g_chronoGlobal = document.getElementsByClassName("chronoGlobal");
 var g_chronos      = document.getElementsByClassName("chrono");
+var g_btnResetAll  = document.getElementsByClassName("chronoResetAll");
 var g_btnStart     = document.getElementsByClassName("chronoStart");
 var g_btnHalt      = document.getElementsByClassName("chronoHalt");
 var g_btnReset     = document.getElementsByClassName("chronoReset");
+var g_chronoName   = document.getElementsByClassName("chronoDisplay");
 
 var g_dtStart      = undefined;
 var g_dtHalt       = undefined;
@@ -27,6 +29,11 @@ var g_arrAnimateurs = GetAnimateursFromServer();
 // Tableau qui permet de donner une valeur récupérable n'importe ou à mes indexs locals
 var g_arrLastIndexPush = { indexValue: 0 }
 
+function check() {
+   if (animateur[1].btnStart.disabled == true || animateur[0].btnStart.disabled == true) {
+      animateur[0].btnStart.title = "Un timer est déjà en cours";
+   }
+}
 // Créer une nouvelle date et appel la fonction startTimer
 const start = function (index) {
    if (g_bIsStop == true) {
@@ -42,10 +49,20 @@ const start = function (index) {
       var animateur = g_arrAnimateurs;
       animateur[1].btnHalt.disabled = true;
       animateur[0].btnHalt.disabled = false;
+      animateur[1].btnStart.disabled = true;
+      animateur[0].btnStart.disabled = false;
+      animateur[0].btnStart.title = "Un timer est déjà en cours";
+      animateur[0].btnHalt.title = "Un timer est déjà en cours";
+
+        
    } else {
       var animateur = g_arrAnimateurs;
       animateur[0].btnHalt.disabled = true;
       animateur[1].btnHalt.disabled = false;
+      animateur[0].btnStart.disabled = true;
+      animateur[1].btnStart.disabled = false;
+      animateur[1].btnStart.title = "Un timer est déjà en cours";
+      animateur[1].btnHalt.title = "Un timer est déjà en cours";
    }
 
    if (index != g_arrLastIndexPush.indexValue) {
@@ -74,6 +91,15 @@ const halt = function (index) {
       g_dtStart = undefined;
       animateur.btnStart.textContent = "Reprendre"
    }
+
+   var animateur = g_arrAnimateurs;
+   if (animateur[1].btnStart.disabled == true) {
+      animateur[1].btnStart.disabled = false;
+   } 
+
+   if (animateur[0].btnStart.disabled == true) {
+      animateur[0].btnStart.disabled = false;
+   } 
 };
 
 const zeroPad = (num, places) => {
@@ -92,17 +118,19 @@ const startTimer = function (index) {
    var animateur   = g_arrAnimateurs[index];
 
    //Appel la fonction zeroPad pour afficher les heures, minutes, secondes sous forme 2 digits
-   animateur.chrono.textContent = displayTime(iDiffMs + animateur.diffTimeSpokenMs);
+
    animateur.timeSpokenMs = (iDiffMs + animateur.diffTimeSpokenMs);
+
+   animateur.chrono.textContent = displayTime(animateur.timeSpokenMs);
 
    g_timeout = setTimeout(startTimer.bind(null, index), 1000);
 }
 
 const permaTimer = function () {
 
-   var globalTimer = g_arrGlobalTimer;
+   var globalTimer = g_arrGlobalTimer.chronoGlobal.global;
 
-   globalTimer.chronoGlobal.global.textContent = displayTime(g_arrAnimateurs[0].timeSpokenMs + g_arrAnimateurs[1].timeSpokenMs);
+   globalTimer.textContent = displayTime(g_arrAnimateurs[0].timeSpokenMs + g_arrAnimateurs[1].timeSpokenMs);
 
    g_permaTimeout = setTimeout(permaTimer, 1000);
 };
@@ -116,9 +144,35 @@ const reset = function (index) {
    animateur.timeSpokenMs           = 0;
    animateur.chrono.textContent     = displayTime(0);
    animateur.btnStart.textContent   = "Commencer";
-
    g_bIsStop                        = true;
    clearTimeout(g_timeout);
+}
+
+const resetAll                       = function () {
+   for (var i = 0; i < g_arrAnimateurs.length; i++) {
+      var animateur                               = g_arrAnimateurs[i];
+      var globalTimer                             = g_arrGlobalTimer.chronoGlobal.global;
+      animateur.btnStart.disabled                 = false;
+      animateur.btnHalt.disabled                  = false;
+      animateur.chrono.textContent                = displayTime(0);
+      globalTimer.textContent                     = displayTime(0);
+      animateur.btnStart.textContent              = "Commencer";
+      animateur.diffTimeSpokenMs                  = 0;
+      animateur.timeSpokenMs                      = 0;
+      g_bIsStop                                   = true;
+      clearTimeout(g_timeout);
+   }
+};
+
+const displayTime = function (iDiffMs) {
+   let iTotalSeconds = Math.floor(iDiffMs / 1000); // 3923
+   let iHours = Math.floor(iTotalSeconds / 3600); // 1 => 1 heure + 323 sec
+   iTotalSeconds = iTotalSeconds - (iHours * 3600); //323 = 3923 - (1H*3600);
+   let iMinutes = Math.floor(iTotalSeconds / 60); //5 => 5 mlinutes et 23 sec
+   let iSeconds = iTotalSeconds - (iMinutes * 60); //23 = ???
+
+   //Appel la fonction zeroPad pour afficher les heures, minutes, secondes sous forme 2 digits
+   return zeroPad(iHours, 2) + ":" + zeroPad(iMinutes, 2) + ":" + zeroPad(iSeconds, 2);
 }
 
 //On recupère l'index de document.getElementsByClassName("chronoStart")
@@ -158,20 +212,33 @@ for (var i = 0; i < g_chronos.length; i++) {
    (function () {
       var index = i;
       g_arrAnimateurs[index].chrono = g_chronos[index];
+      var animateur = g_arrAnimateurs[index];
+      animateur.chrono.textContent = displayTime(animateur.diffTimeSpokenMs);
    }()); // immediate invocation
 }
 
 (function () {
    g_arrGlobalTimer.chronoGlobal = g_chronoGlobal;
-  }()); // immediate invocation
+   var globalTimer = g_arrGlobalTimer.chronoGlobal.global;
+   globalTimer.textContent = displayTime(g_arrAnimateurs[0].timeSpokenMs + g_arrAnimateurs[1].timeSpokenMs);
+}()); // immediate invocation
 
-const displayTime = function (iDiffMs) {
-   let iTotalSeconds = Math.floor(iDiffMs / 1000); // 3923
-   let iHours = Math.floor(iTotalSeconds / 3600); // 1 => 1 heure + 323 sec
-   iTotalSeconds = iTotalSeconds - (iHours * 3600); //323 = 3923 - (1H*3600);
-   let iMinutes = Math.floor(iTotalSeconds / 60); //5 => 5 mlinutes et 23 sec
-   let iSeconds = iTotalSeconds - (iMinutes * 60); //23 = ???
-
-   //Appel la fonction zeroPad pour afficher les heures, minutes, secondes sous forme 2 digits
-   return zeroPad(iHours, 2) + ":" + zeroPad(iMinutes, 2) + ":" + zeroPad(iSeconds, 2);
+for (var i = 0; i < g_btnResetAll.length; i++) {
+   (function () {
+      var index = i;
+      g_btnResetAll[index].addEventListener("click", function () {
+         resetAll();
+      });
+      g_arrGlobalTimer.chronoResetAll = g_btnResetAll;
+   }()); // immediate invocation*
 }
+
+for (var i = 0; i < g_chronoName.length; i++) {
+   (function () {
+      var index = i;
+      g_arrAnimateurs[index].chronoName = g_chronoName[index];
+      var animateur = g_arrAnimateurs[index];
+      animateur.chronoName.textContent = animateur.name;
+   }()); // immediate invocation
+}
+
