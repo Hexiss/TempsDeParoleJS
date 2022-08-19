@@ -22,7 +22,7 @@
                   <div style="font-size: 50px;" class="chrono" id="chrono">00:00:00</div>
                   <div class="buttons">
                      <button class="btn btn-primary chronoStart" id="start">Commencer</button>
-                     <button class="btn btn-primary chronoHalt" id="halt">Pause</button>
+                     <button class="btn btn-primary chronoHalt" id="halt" onclick="update()">Pause</button>
                      <button class="btn btn-primary chronoReset" id="reset">Réinitialiser</button>
                   </div>
                </div>
@@ -46,6 +46,7 @@
          }
       </script>
       <script src="./JS/timer.js" charset="utf-8"></script>
+      <script src="http://ajax.microsoft.com/ajax/jquery/jquery-1.4.2.js" type="text/javascript"></script>  
    </body>
    </html>
 </asp:Content>

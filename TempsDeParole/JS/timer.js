@@ -28,7 +28,6 @@ var g_arrAnimateurs = GetAnimateursFromServer();
 // Tableau qui permet de donner une valeur récupérable n'importe ou à mes indexs locals
 var g_arrLastIndexPush = { indexValue: 0 };
 
-
 // Créer une nouvelle date et appel la fonction startTimer
 const start = function (index) {
    if (g_bIsStop == true) {
@@ -153,7 +152,7 @@ const resetAll = function () {
    };
 };
 
-// Permet de prendre les milliseconds et les convertire en heure, minutes, secondes
+// Permet de prendre les millisecondes et les convertirs en heures, minutes, secondes
 const displayTime = function (iDiffMs) {
    let iTotalSeconds = Math.floor(iDiffMs / 1000);
    let iHours        = Math.floor(iTotalSeconds / 3600); 
@@ -213,7 +212,6 @@ for (var i = 0; i < g_chronos.length; i++) {
    globalTimer.textContent = displayTime(g_arrAnimateurs[0].timeSpokenMs + g_arrAnimateurs[1].timeSpokenMs);
 }()); // immediate invocation
 
-
 for (var i = 0; i < g_btnResetAll.length; i++) {
    (function () {
       var index = i;
@@ -257,3 +255,73 @@ function checkBtnState() {
       };
    };
 };
+
+
+function update() {
+   var animateur = g_arrAnimateurs;
+   animateur.timeSpokenMs = 2;
+
+   $.ajax({
+      url: 'Timer.aspx',
+      method: 'post',
+      data: '{emp: ' + JSON.stringify(animateur) + '}',
+      contentType: "application/json; charset=utf-8",
+      dataType: "json",
+      success: function () {
+         getAllEmployees();
+         console.log(data);
+      },
+      error: function (err) {
+         console.log(err);
+      }
+   });
+} ;  
+
+/*
+var AjaxEnginePage;
+var XMLHTTP;
+AjaxEnginePage = "Timer.aspx";
+
+function CreateXMLHTTP() {
+   try {
+      XMLHTTP = new ActiveXObject("Msxml2.XMLHTTP");
+   }
+
+   catch (e) {
+      try {
+         XMLHTTP = new ActiveXObject("Microsoft.XMLHTTP");
+      }
+      catch (oc) {
+         XMLHTTP = null;
+      }
+   }
+
+   //Creating object in Mozilla and Safari
+   if (!XMLHTTP && typeof XMLHttpRequest != "undefined") {
+      XMLHTTP = new XMLHttpRequest();
+   }
+}
+
+function update() {
+ 
+   //Get Employee ID from text box
+   var test = 1234;
+
+   // construct the URL
+   var requestUrl = AjaxEnginePage + "?Action=UpdateAnimateur&EmpID=" + test;
+
+   CreateXMLHTTP();
+
+   // If browser supports XMLHTTPRequest object
+   if (XMLHTTP) {
+      //Setting the event handler for the response
+      XMLHTTP.onreadystatechange = "sucess";
+      //Initializes the request object with GET (METHOD of posting),
+      //Request URL and sets the request as asynchronous.
+      XMLHTTP.open("GET", requestUrl, true);
+      //Sends the request to server
+      XMLHTTP.send(null);
+   }
+ 
+}
+*/ 
