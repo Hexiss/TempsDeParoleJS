@@ -19,21 +19,16 @@ var g_permaTimeout;
 
 var g_bIsStop = true;
 
-var g_arrGlobalTimer = {
-      globalTimeSpokenMs : 0,
-      chronoGlobal       : undefined,
-   };
+var g_arrGlobalTimer = { chronoGlobal : undefined };
 
+// g_arrAnimateurs = table ou mes animateurs et temps de paroles sont stockés
+// GetAnimateursFromServer(); = liaison entre le back c# et la bdd
 var g_arrAnimateurs = GetAnimateursFromServer();
 
 // Tableau qui permet de donner une valeur récupérable n'importe ou à mes indexs locals
-var g_arrLastIndexPush = { indexValue: 0 }
+var g_arrLastIndexPush = { indexValue: 0 };
 
-function check() {
-   if (animateur[1].btnStart.disabled == true || animateur[0].btnStart.disabled == true) {
-      animateur[0].btnStart.title = "Un timer est déjà en cours";
-   }
-}
+
 // Créer une nouvelle date et appel la fonction startTimer
 const start = function (index) {
    if (g_bIsStop == true) {
@@ -43,32 +38,26 @@ const start = function (index) {
       };
       startTimer(index);
       permaTimer();
-   }
+   };
+   
    // Si le timer 1 est route bloque le bouton pause du timer 2 et inversement
    if (index == 0) {
-      var animateur = g_arrAnimateurs;
-      animateur[1].btnHalt.disabled = true;
-      animateur[0].btnHalt.disabled = false;
+      var animateur                  = g_arrAnimateurs;
+      animateur[1].btnHalt.disabled  = true;
+      animateur[0].btnHalt.disabled  = false;
       animateur[1].btnStart.disabled = true;
       animateur[0].btnStart.disabled = false;
-      animateur[0].btnStart.title = "Un timer est déjà en cours";
-      animateur[0].btnHalt.title = "Un timer est déjà en cours";
-
-        
+      
    } else {
-      var animateur = g_arrAnimateurs;
-      animateur[0].btnHalt.disabled = true;
-      animateur[1].btnHalt.disabled = false;
+      var animateur                  = g_arrAnimateurs;
+      animateur[0].btnHalt.disabled  = true;
+      animateur[1].btnHalt.disabled  = false;
       animateur[0].btnStart.disabled = true;
       animateur[1].btnStart.disabled = false;
-      animateur[1].btnStart.title = "Un timer est déjà en cours";
-      animateur[1].btnHalt.title = "Un timer est déjà en cours";
-   }
+   };
 
-   if (index != g_arrLastIndexPush.indexValue) {
-      halt;
-   }
-   g_arrLastIndexPush.indexValue = index
+   checkBtnState();
+   g_arrLastIndexPush.indexValue = index;
 };
 
 // Met sur pose le timer
@@ -77,12 +66,12 @@ const halt = function (index) {
    // Si le timer 1 est en marche et que j'appuie sur le btn pause du timer 2 je sors de la boucle et donc je ne fais rien
    if (index != g_arrLastIndexPush.indexValue) {
       return;
-   }
+   };
 
    if (g_bIsStop == false) {
       g_bIsStop = true;
       clearTimeout(g_timeout);
-   }
+   };
    if (g_dtStart) {
       var dtNow     = new Date;
       let iDiffMs   = dtNow - g_dtStart;
@@ -90,16 +79,17 @@ const halt = function (index) {
       animateur.diffTimeSpokenMs += iDiffMs;
       g_dtStart = undefined;
       animateur.btnStart.textContent = "Reprendre"
-   }
+   };
 
    var animateur = g_arrAnimateurs;
    if (animateur[1].btnStart.disabled == true) {
       animateur[1].btnStart.disabled = false;
-   } 
+   };
 
    if (animateur[0].btnStart.disabled == true) {
       animateur[0].btnStart.disabled = false;
-   } 
+   };
+   checkBtnState();
 };
 
 const zeroPad = (num, places) => {
@@ -113,9 +103,9 @@ const zeroPad = (num, places) => {
 const startTimer = function (index) {
    if (g_bIsStop == true)
       return;
-   var dtNow       = new Date;
-   let iDiffMs     = dtNow - g_dtStart;
-   var animateur   = g_arrAnimateurs[index];
+   var dtNow     = new Date;
+   let iDiffMs   = dtNow - g_dtStart;
+   var animateur = g_arrAnimateurs[index];
 
    //Appel la fonction zeroPad pour afficher les heures, minutes, secondes sous forme 2 digits
 
@@ -124,31 +114,30 @@ const startTimer = function (index) {
    animateur.chrono.textContent = displayTime(animateur.timeSpokenMs);
 
    g_timeout = setTimeout(startTimer.bind(null, index), 1000);
-}
+};
 
+// Lance un timeout qui ne se clear jamais pour mettre à jour le timer global
 const permaTimer = function () {
-
-   var globalTimer = g_arrGlobalTimer.chronoGlobal.global;
-
-   globalTimer.textContent = displayTime(g_arrAnimateurs[0].timeSpokenMs + g_arrAnimateurs[1].timeSpokenMs);
-
+   refreshGlobalTimer()
    g_permaTimeout = setTimeout(permaTimer, 1000);
 };
 
-//Repasse mon timer à 0
+//Repasse les valeurs de mon timer à 0
 const reset = function (index) {
-   var animateur                    = g_arrAnimateurs[index];
-   g_dtHalt                         = undefined;
-   g_dtStart                        = undefined;
-   animateur.diffTimeSpokenMs       = 0;
-   animateur.timeSpokenMs           = 0;
-   animateur.chrono.textContent     = displayTime(0);
-   animateur.btnStart.textContent   = "Commencer";
-   g_bIsStop                        = true;
+   var animateur                  = g_arrAnimateurs[index];
+   g_dtHalt                       = undefined;
+   g_dtStart                      = undefined;
+   animateur.diffTimeSpokenMs     = 0;
+   animateur.timeSpokenMs         = 0;
+   animateur.chrono.textContent   = displayTime(0);
+   animateur.btnStart.textContent = "Commencer";
+   g_bIsStop                      = true;
    clearTimeout(g_timeout);
-}
+   refreshGlobalTimer();
+};
 
-const resetAll                       = function () {
+//Remet toutes les valeurs de tous les timers à 0
+const resetAll = function () {
    for (var i = 0; i < g_arrAnimateurs.length; i++) {
       var animateur                               = g_arrAnimateurs[i];
       var globalTimer                             = g_arrGlobalTimer.chronoGlobal.global;
@@ -161,19 +150,20 @@ const resetAll                       = function () {
       animateur.timeSpokenMs                      = 0;
       g_bIsStop                                   = true;
       clearTimeout(g_timeout);
-   }
+   };
 };
 
+// Permet de prendre les milliseconds et les convertire en heure, minutes, secondes
 const displayTime = function (iDiffMs) {
-   let iTotalSeconds = Math.floor(iDiffMs / 1000); // 3923
-   let iHours = Math.floor(iTotalSeconds / 3600); // 1 => 1 heure + 323 sec
-   iTotalSeconds = iTotalSeconds - (iHours * 3600); //323 = 3923 - (1H*3600);
-   let iMinutes = Math.floor(iTotalSeconds / 60); //5 => 5 mlinutes et 23 sec
-   let iSeconds = iTotalSeconds - (iMinutes * 60); //23 = ???
+   let iTotalSeconds = Math.floor(iDiffMs / 1000);
+   let iHours        = Math.floor(iTotalSeconds / 3600); 
+   iTotalSeconds     = iTotalSeconds - (iHours * 3600); 
+   let iMinutes      = Math.floor(iTotalSeconds / 60); 
+   let iSeconds      = iTotalSeconds - (iMinutes * 60); 
 
    //Appel la fonction zeroPad pour afficher les heures, minutes, secondes sous forme 2 digits
    return zeroPad(iHours, 2) + ":" + zeroPad(iMinutes, 2) + ":" + zeroPad(iSeconds, 2);
-}
+};
 
 //On recupère l'index de document.getElementsByClassName("chronoStart")
 //car coté HTML il y'a plusieurs bouttons avec la même classe
@@ -186,7 +176,7 @@ for (var i = 0; i < g_btnStart.length; i++) {
       });
       g_arrAnimateurs[index].btnStart = g_btnStart[index];
    }()); // immediate invocation
-}
+};
 
 for (var i = 0; i < g_btnHalt.length; i++) {
    (function () {
@@ -196,7 +186,7 @@ for (var i = 0; i < g_btnHalt.length; i++) {
       });
       g_arrAnimateurs[index].btnHalt = g_btnHalt[index];
    }()); // immediate invocation
-}
+};
 
 for (var i = 0; i < g_btnReset.length; i++) {
    (function () {
@@ -206,7 +196,7 @@ for (var i = 0; i < g_btnReset.length; i++) {
       });
       g_arrAnimateurs[index].btnReset = g_btnReset[index];
    }()); // immediate invocation
-}
+};
 
 for (var i = 0; i < g_chronos.length; i++) {
    (function () {
@@ -215,13 +205,14 @@ for (var i = 0; i < g_chronos.length; i++) {
       var animateur = g_arrAnimateurs[index];
       animateur.chrono.textContent = displayTime(animateur.diffTimeSpokenMs);
    }()); // immediate invocation
-}
+};
 
 (function () {
    g_arrGlobalTimer.chronoGlobal = g_chronoGlobal;
    var globalTimer = g_arrGlobalTimer.chronoGlobal.global;
    globalTimer.textContent = displayTime(g_arrAnimateurs[0].timeSpokenMs + g_arrAnimateurs[1].timeSpokenMs);
 }()); // immediate invocation
+
 
 for (var i = 0; i < g_btnResetAll.length; i++) {
    (function () {
@@ -231,7 +222,7 @@ for (var i = 0; i < g_btnResetAll.length; i++) {
       });
       g_arrGlobalTimer.chronoResetAll = g_btnResetAll;
    }()); // immediate invocation*
-}
+};
 
 for (var i = 0; i < g_chronoName.length; i++) {
    (function () {
@@ -240,5 +231,29 @@ for (var i = 0; i < g_chronoName.length; i++) {
       var animateur = g_arrAnimateurs[index];
       animateur.chronoName.textContent = animateur.name;
    }()); // immediate invocation
-}
+};
 
+//Garde l'affichage de l'heure global à jour
+function refreshGlobalTimer () {
+   var globalTimer = g_arrGlobalTimer.chronoGlobal.global;
+   globalTimer.textContent = displayTime(g_arrAnimateurs[0].timeSpokenMs + g_arrAnimateurs[1].timeSpokenMs);
+};
+
+//Si les boutons pause et start sont lock alors affiche un tooltip
+function checkBtnState() {
+   for (i = 0; i < g_arrAnimateurs.length; i++) {
+      var animateur = g_arrAnimateurs[i];
+
+      if (animateur.btnStart.disabled == true) {
+         animateur.btnStart.title = "Un timer est déjà en cours";
+      } else {
+         animateur.btnStart.title = "";
+      };
+
+      if (animateur.btnHalt.disabled == true) {
+         animateur.btnHalt.title = "Un timer est déjà en cours";
+      } else {
+         animateur.btnHalt.title = "";
+      };
+   };
+};
