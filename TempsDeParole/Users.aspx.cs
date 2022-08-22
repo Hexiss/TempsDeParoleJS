@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Data;
-using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
+using System.Web.Script.Serialization;
 using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.WebControls;
@@ -13,46 +12,48 @@ namespace TempsDeParole
 {
    public partial class Users : System.Web.UI.Page
    {
-      public string Username { get; set; }
-      public string Password { get; set; }
+
+      public string m_strAnimateurs { get; set; }
+      public string name { get; set; }
+      public string timeSpokenMs { get; set; }
+      public int id { get; private set; }
 
       protected void Page_Load(object sender, EventArgs e)
       {
-         if (!this.IsPostBack)
-         {
-            string constr = ConfigurationManager.ConnectionStrings["constr"].ConnectionString;
-            using (SqlConnection con = new SqlConnection(constr))
-            {
-               using (SqlDataAdapter sda = new SqlDataAdapter("SELECT * FROM Users", con))
-               {
-                  DataTable dt = new DataTable();
-                  sda.Fill(dt);
-                  gvUsers.DataSource = dt;
-                  gvUsers.DataBind();
-               }
-            }
-         }
+         //LM: appelé à chaque postback de la page
+
+         m_strAnimateurs = ListAnimateursInJson();
+
       }
-      [WebMethod]
-      public static void SaveUser(Users user)
+
+      private string ListAnimateursInJson()
       {
-         string constr = ConfigurationManager.ConnectionStrings["constr"].ConnectionString;
-         using (SqlConnection con = new SqlConnection(constr))
+         string strAnimateursJSON = "";
+         using (var db = new TempsDeParoleEntities())
          {
-            using (SqlCommand cmd = new SqlCommand("INSERT INTO Users VALUES(@Username, @Password)"))
+            var list = db.Animateurs.ToList();
+            var js = new JavaScriptSerializer();
+            strAnimateursJSON = js.Serialize(list);
+         }
+         return strAnimateursJSON;
+      }
+
+      [WebMethod]
+      public static int saveUser(string name, int diffTimeSpokenMs, int timeSpokenMs)
+      {
+         using (var db = new TempsDeParoleEntities())
             {
-               cmd.CommandType = CommandType.Text;
-               cmd.Parameters.AddWithValue("@Username", user.Username);
-               cmd.Parameters.AddWithValue("@Password", user.Password);
-               cmd.Connection = con;
-               con.Open();
-               cmd.ExecuteNonQuery();
-               con.Close();
-            }
+            DataTable dt = new DataTable();
+            dt.Columns.Add("name");
+            dt.Columns.Add("diffTimeSpokenMs");
+            dt.Columns.Add("timeSpokenMs");
+            DataRow row = dt.NewRow();
+            row["name"] = name;
+            row["diffTimeSpokenMs"] = diffTimeSpokenMs;
+            row["timeSpokenMs"] = timeSpokenMs;
+
+            dt.Rows.Add(row);
          }
       }
    }
-
-
-
 }

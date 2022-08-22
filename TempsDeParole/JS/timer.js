@@ -89,6 +89,7 @@ const halt = function (index) {
       animateur[0].btnStart.disabled = false;
    };
    checkBtnState();
+   UpdateDataOnServer(index);
 };
 
 const zeroPad = (num, places) => {
@@ -133,6 +134,7 @@ const reset = function (index) {
    g_bIsStop                      = true;
    clearTimeout(g_timeout);
    refreshGlobalTimer();
+   UpdateDataOnServer(index);
 };
 
 //Remet toutes les valeurs de tous les timers à 0
@@ -256,72 +258,22 @@ function checkBtnState() {
    };
 };
 
+function UpdateDataOnServer(index) {
 
-function update() {
-   var animateur = g_arrAnimateurs;
-   animateur.timeSpokenMs = 2;
+   var animateur = g_arrAnimateurs[index];
 
    $.ajax({
-      url: 'Timer.aspx',
-      method: 'post',
-      data: '{emp: ' + JSON.stringify(animateur) + '}',
+      type: "POST",
+      url: "Timer.aspx/saveData",
+      data: JSON.stringify(animateur),
       contentType: "application/json; charset=utf-8",
-      dataType: "json",
-      success: function () {
-         getAllEmployees();
-         console.log(data);
+      datatype: "json",
+      async: "true",
+      success: function (response) {
+         $(".errMsg ul").remove();
       },
-      error: function (err) {
-         console.log(err);
+      error: function (response) {
+         alert(response.status + ' ' + response.statusText);
       }
    });
-} ;  
-
-/*
-var AjaxEnginePage;
-var XMLHTTP;
-AjaxEnginePage = "Timer.aspx";
-
-function CreateXMLHTTP() {
-   try {
-      XMLHTTP = new ActiveXObject("Msxml2.XMLHTTP");
-   }
-
-   catch (e) {
-      try {
-         XMLHTTP = new ActiveXObject("Microsoft.XMLHTTP");
-      }
-      catch (oc) {
-         XMLHTTP = null;
-      }
-   }
-
-   //Creating object in Mozilla and Safari
-   if (!XMLHTTP && typeof XMLHttpRequest != "undefined") {
-      XMLHTTP = new XMLHttpRequest();
-   }
 }
-
-function update() {
- 
-   //Get Employee ID from text box
-   var test = 1234;
-
-   // construct the URL
-   var requestUrl = AjaxEnginePage + "?Action=UpdateAnimateur&EmpID=" + test;
-
-   CreateXMLHTTP();
-
-   // If browser supports XMLHTTPRequest object
-   if (XMLHTTP) {
-      //Setting the event handler for the response
-      XMLHTTP.onreadystatechange = "sucess";
-      //Initializes the request object with GET (METHOD of posting),
-      //Request URL and sets the request as asynchronous.
-      XMLHTTP.open("GET", requestUrl, true);
-      //Sends the request to server
-      XMLHTTP.send(null);
-   }
- 
-}
-*/ 

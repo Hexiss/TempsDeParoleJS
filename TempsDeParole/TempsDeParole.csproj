@@ -75,6 +75,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="JS\users.js" />
     <Content Include="JS\timer.js" />
     <Content Include="DB.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>

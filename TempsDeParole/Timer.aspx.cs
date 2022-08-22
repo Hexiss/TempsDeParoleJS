@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Configuration;
 using System.Data;
-using System.Data.SqlClient;
+using System.Data.OleDb;
 using System.Linq;
 using System.Web.Script.Serialization;
 using System.Web.Services;
 using System.Web.UI.WebControls;
-
 
 namespace TempsDeParole
 {
@@ -16,6 +14,7 @@ namespace TempsDeParole
       public string m_strAnimateurs { get; set; }
       public string name { get; set; }
       public string timeSpokenMs { get; set; }
+      public int id { get; private set; }
 
       protected void Page_Load(object sender, EventArgs e)
       {
@@ -38,41 +37,27 @@ namespace TempsDeParole
       }
 
       [WebMethod]
-      public void AddEmployee(Timer emp)
+      public static int saveData(int id, int diffTimeSpokenMs, int timeSpokenMs)
       {
-         string CS = ConfigurationManager.ConnectionStrings["DBCS"].ConnectionString;
-         using (SqlConnection con = new SqlConnection(CS))
+         try
          {
-            SqlCommand cmd = new SqlCommand("spAddNewEmployee", con);
-            cmd.CommandType = CommandType.StoredProcedure;
-            cmd.Parameters.Add(new SqlParameter()
+            int status = 0;
+
+            using (var db = new TempsDeParoleEntities())
             {
-               Value = emp.m_strAnimateurs
-            });
-            con.Open();
-            cmd.ExecuteNonQuery();
+               var animateur = db.Animateurs.Find(id);
+               animateur.diffTimeSpokenMs = diffTimeSpokenMs;
+               animateur.timeSpokenMs = timeSpokenMs;
+               db.SaveChanges();
+            }
+            return status;
+         }
+         catch
+         {
+            return -1;
          }
       }
+
    }
 }
-      /*
-      private void UpdateAnimateur(int test)
-      {
-         using (var connection = new SqlConnection("connectionString"))
-         {
-            connection.Open();
-            var sql = "INSERT INTO Animateurs(timeSpokenMs) VALUES(@test)";
-            using (var cmd = new SqlCommand(sql, connection))
-            {
-               cmd.Parameters.AddWithValue("@test", test);
-               cmd.ExecuteNonQuery();
-            }
-         }
-            SqlConnection cnn = new SqlConnection(ConfigurationSettings.AppSettings["CnnStr"]);
-            cnn.Open();
-            SqlCommand cmd = new SqlCommand("UPDATE users Set timeSpokenMs=" + test , cnn);
-            cmd.ExecuteNonQuery();
-         }
-
-*/
 

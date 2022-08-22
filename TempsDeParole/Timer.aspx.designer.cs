@@ -10,6 +10,6 @@
 namespace TempsDeParole {
     
     
-    public partial class Timer {
+    public partial class m_strAnimateurs {
     }
 }
