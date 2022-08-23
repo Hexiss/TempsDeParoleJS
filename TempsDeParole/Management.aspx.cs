@@ -6,9 +6,8 @@ using System.Web.UI.WebControls;
 
 namespace TempsDeParole
 {
-   public partial class Timer : System.Web.UI.Page
+   public partial class Management : System.Web.UI.Page
    {
-
       public string m_strAnimateurs { get; set; }
 
       protected void Page_Load(object sender, EventArgs e)
@@ -32,7 +31,7 @@ namespace TempsDeParole
       }
 
       [WebMethod]
-      public static int saveData(int id, int diffTimeSpokenMs, int timeSpokenMs)
+      public static int addAnimateur(string name, int diffTimeSpokenMs, int timeSpokenMs)
       {
          try
          {
@@ -40,9 +39,13 @@ namespace TempsDeParole
 
             using (var db = new TempsDeParoleEntities())
             {
-               var animateur = db.Animateurs.Find(id);
-               animateur.diffTimeSpokenMs = diffTimeSpokenMs;
-               animateur.timeSpokenMs = timeSpokenMs;
+               var animateur = new Animateurs()
+               {
+                  name = name,
+                  diffTimeSpokenMs = diffTimeSpokenMs,
+                  timeSpokenMs = timeSpokenMs,
+               };
+               db.Animateurs.Add(animateur);
                db.SaveChanges();
             }
             return status;
@@ -52,6 +55,27 @@ namespace TempsDeParole
             return -1;
          }
       }
+
+      [WebMethod]
+      public static int removeAnimateur(int id)
+      {
+         try
+         {
+            int status = 0;
+
+            using (var db = new TempsDeParoleEntities())
+            {
+               var animateur = db.Animateurs.Find(id);
+               db.Animateurs.Remove(animateur);
+               db.SaveChanges();
+            }
+            return status;
+         }
+         catch
+         {
+            return -1;
+         }
+      }
+
    }
 }
-

@@ -88,7 +88,7 @@
       <LastGenOutput>DB.cs</LastGenOutput>
     </Content>
     <Content Include="Timer.aspx" />
-    <Content Include="Users.aspx" />
+    <Content Include="Management.aspx" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -125,16 +125,15 @@
     <Compile Include="Timer.aspx.designer.cs">
       <DependentUpon>Timer.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Users.aspx.cs">
-      <DependentUpon>Users.aspx</DependentUpon>
+    <Compile Include="Management.aspx.cs">
+      <DependentUpon>Management.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Users.aspx.designer.cs">
-      <DependentUpon>Users.aspx</DependentUpon>
+    <Compile Include="Management.aspx.designer.cs">
+      <DependentUpon>Management.aspx</DependentUpon>
     </Compile>
     <Compile Include="Users.cs">
       <DependentUpon>DB.tt</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>

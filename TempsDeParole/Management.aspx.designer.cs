@@ -11,7 +11,7 @@ namespace TempsDeParole
 {
 
 
-   public partial class Users
+   public partial class Management
    {
    }
 }

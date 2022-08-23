@@ -24,7 +24,7 @@
                   <a class="nav-link" href="/Timer.aspx">Timer</a>
                </li>
                <li class="nav-item">
-                  <a class="nav-link" href="/Users.aspx">Users</a>
+                  <a class="nav-link" href="/Management.aspx">Management</a>
                </li>
             </ul>
          </div>

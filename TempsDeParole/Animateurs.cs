@@ -9,14 +9,20 @@
 
 namespace TempsDeParole
 {
-    using System;
-    using System.Collections.Generic;
-    
-    public partial class Animateurs
+   using System;
+   using System.Collections.Generic;
+   using System.Data.Entity;
+
+   public partial class Animateurs
     {
         public int id { get; set; }
         public string name { get; set; }
         public long diffTimeSpokenMs { get; set; }
         public long timeSpokenMs { get; set; }
-    }
+
+      public static implicit operator DbSet<object>(Animateurs v)
+      {
+         throw new NotImplementedException();
+      }
+   }
 }
