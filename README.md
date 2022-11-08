@@ -4,6 +4,7 @@ Création d'un projet pour comptabiliser le temps de parole de différents anima
 - Chronomètre unique pour chaque utilisateur
 - Fonction pause, play, reset
 - CRUD dynamique en BDD
+- Programmation d'émission, d'événement...
 - Timeline dynamique 
 - Filtre Ajax 
 
